@@ -15,19 +15,19 @@
 // Shaders
 #include "Shader.h"
 
-const GLint WIDTH = 800, HEIGHT = 600;
+const GLint WIDTH = 1400, HEIGHT = 800; // TAMAÑO DE LA VENTANA
 
 
 int main() {
 	glfwInit();
 	//Verificaci�n de compatibilidad 
 	// Set all the required options for GLFW
-	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);*/
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "Proyecciones y transformaciones basicas", nullptr, nullptr);
 
@@ -48,8 +48,7 @@ int main() {
 	glewExperimental = GL_TRUE;
 
 	//Verificaci�n de errores de inicializaci�n de glew
-
-	if (GLEW_OK != glewInit()) {
+		if (GLEW_OK != glewInit()) {
 		std::cout << "Failed to initialise GLEW" << std::endl;
 		return EXIT_FAILURE;
 	}
@@ -200,7 +199,9 @@ int main() {
 	
 	glm::mat4 projection=glm::mat4(1);
 
-	projection = glm::perspective(45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);//FOV, Radio de aspecto,znear,zfar
+
+	//CAMARA
+	projection = glm::perspective(/*ALEJAR O ACERCAR LA CAMARA*/45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);//FOV, Radio de aspecto,znear,zfar
 	//projection = glm::ortho(0.0f, (GLfloat)screenWidth, 0.0f, (GLfloat)screenHeight, 0.1f, 1000.0f);//Izq,Der,Fondo,Alto,Cercania,Lejania
 	while (!glfwWindowShouldClose(window))
 	{
@@ -220,7 +221,7 @@ int main() {
 	
 		view = glm::translate(view, glm::vec3(0.0f,0.0f,-12.0f));
 		model = glm::rotate( model, 0.5f, glm::vec3( 0.0f, 1.0f, 0.0f ) ); // use to compare orthographic and perspective projection
-		model = glm::scale(model, glm::vec3(2.0f, 3.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 5.0f, 3.0f));
 		//view = glm::translate( view, glm::vec3( screenWidth / 2, screenHeight / 2,-700.0f ) ); // use with orthographic projection
 		
 		GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
@@ -239,6 +240,8 @@ int main() {
 		model = glm::rotate(model, 45.0f, glm::vec3(0.0f, 0.0f, 1.0f)); // use to compare orthographic and perspective projection
 		model = glm::scale(model, glm::vec3(8.0f, 1.0f, 5.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+		//LO MANDA AL SHADER PARA QUE LO DIBUJE
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		glBindVertexArray(0);
